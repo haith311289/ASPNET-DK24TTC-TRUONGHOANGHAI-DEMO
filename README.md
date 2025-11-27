@@ -1,8 +1,55 @@
 # ASPNET-DK24TTC-TRUONGHOANGHAI-DEMO
-☕ CoffeeShopMVC – Website Bán Cà Phê Giải Khát (ASP.NET MVC)
+☕ Trương Hoàng Hải – Website Bán Cà Phê Giải Khát (ASP.NET Core MVC)
 
 Website thương mại điện tử giúp người dùng xem, lựa chọn và đặt mua các sản phẩm cà phê giải khát.
 Dự án được xây dựng bằng ASP.NET MVC 5, Entity Framework, SQL Server, đảm bảo tốc độ, bảo mật và dễ mở rộng.
+
+1. 🚀 Tính năng chính
+🏠 Trang chủ
+
+Banner khuyến mãi, sản phẩm nổi bật.
+
+Giao diện trực quan, tối ưu trải nghiệm người dùng.
+
+📦 Danh mục & Sản phẩm
+
+Xem danh sách sản phẩm theo loại.
+
+Bộ lọc theo giá, loại, từ khóa.
+
+Trang chi tiết sản phẩm.
+
+🛒 Giỏ hàng
+
+Thêm nhanh sản phẩm vào giỏ (AJAX).
+
+Cập nhật số lượng.
+
+Tính tổng tiền tự động.
+
+💳 Đặt hàng
+
+Nhập thông tin khách hàng.
+
+Lưu đơn hàng vào CSDL.
+
+(Tùy chọn) Gửi email xác nhận.
+
+👤 Tài khoản người dùng
+
+Đăng nhập, đăng ký, đăng xuất.
+
+Hash mật khẩu.
+
+Quản lý thông tin cá nhân.
+
+🛠 Khu vực Admin
+
+Quản lý sản phẩm, danh mục.
+
+Quản lý đơn hàng, hóa đơn.
+
+Phân quyền User / Admin.
 
 
 
