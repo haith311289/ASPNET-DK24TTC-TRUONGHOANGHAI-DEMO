@@ -1,0 +1,109 @@
+﻿@model IEnumerable<WebBanNuocGiaiKhat.Models.TinTuc>
+
+@{
+    ViewData["Title"] = "Tin Tức";
+    var newsItems = Model.Where(p => p.LoaiTin == false);
+}
+
+<!-- Breadcrumb -->
+<div class="py-3" style="background: var(--light-bg);">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+                <li class="breadcrumb-item active">Tin tức</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<!-- News Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Tin Tức Mới Nhất</h2>
+            <p class="section-subtitle">Cập nhật thông tin và xu hướng mới nhất</p>
+        </div>
+
+        <div class="row g-4">
+            @foreach (var item in newsItems)
+            {
+                <div class="col-lg-6">
+                    <div class="news-card" style="background: var(--white); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md); transition: all 0.3s ease; height: 100%;">
+                        <div class="row g-0">
+                            <div class="col-md-5">
+                                <div style="position: relative; padding-top: 100%; overflow: hidden;">
+                                    <img src="@item.AnhTt" alt="@item.TenTt" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="p-4 d-flex flex-column h-100">
+                                    <div class="mb-2">
+                                        <span class="badge" style="background: var(--gradient-primary); padding: 0.5rem 1rem;">Tin tức</span>
+                                    </div>
+                                    <h5 class="mb-3" style="font-weight: 600; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                        <a asp-action="Details" asp-route-id="@item.MaTt" style="color: var(--text-dark); text-decoration: none;">
+                                            @item.TenTt
+                                        </a>
+                                    </h5>
+                                    <p class="text-muted mb-3" style="font-size: 0.9rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                                        @item.Motangan
+                                    </p>
+                                    <div class="mt-auto">
+                                        <div class="d-flex align-items-center text-muted mb-3" style="font-size: 0.85rem;">
+                                            <i class='bx bx-user me-1'></i>
+                                            <span class="me-3">@item.Tacgia</span>
+                                            <i class='bx bx-calendar me-1'></i>
+                                            <span>@item.CreateDate.ToString("dd/MM/yyyy")</span>
+                                        </div>
+                                        <a asp-action="Details" asp-route-id="@item.MaTt" class="btn-modern btn-primary-modern btn-sm">
+                                            <i class='bx bx-right-arrow-alt'></i> Đọc Thêm
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if (!newsItems.Any())
+        {
+            <div class="text-center py-5">
+                <i class='bx bx-news' style="font-size: 5rem; color: var(--text-light);"></i>
+                <h4 class="mt-3">Chưa có tin tức nào</h4>
+                <p class="text-muted">Vui lòng quay lại sau</p>
+            </div>
+        }
+    </div>
+</section>
+
+<style>
+    .news-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-xl);
+    }
+    
+    .news-card h5 a:hover {
+        color: var(--primary-color);
+    }
+    
+    .breadcrumb {
+        background: transparent;
+    }
+    
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: "›";
+        color: var(--text-light);
+    }
+    
+    .breadcrumb-item a {
+        color: var(--text-dark);
+        text-decoration: none;
+    }
+    
+    .breadcrumb-item a:hover {
+        color: var(--primary-color);
+    }
+</style>

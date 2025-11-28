@@ -1,0 +1,152 @@
+﻿@using Microsoft.AspNetCore.Http
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="76x76" href="~/assets/img/apple-icon.png">
+  <title>
+    Admin Dashboard - Hải Trương
+  </title>
+  <!-- Fonts and icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  
+  <!-- Bootstrap CSS -->
+  <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Custom Modern CSS -->
+  <link href="~/css/admin-modern.css" rel="stylesheet" />
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <aside class="modern-sidebar" id="sidenav-main">
+    <div class="sidebar-header">
+        <a class="sidebar-brand" asp-action="Index" asp-controller="Home" asp-area="" target="_blank">
+            <i class='bx bxs-drink'></i>
+            <span>Hải Trương</span>
+        </a>
+    </div>
+    
+    <ul class="nav-list">
+      <li class="nav-title">Quản lý</li>
+      
+      <li class="nav-item">
+        <a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="SanPhams">
+          <i class='bx bxs-package'></i>
+          <span>Sản Phẩm</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="AdminDonHang">
+          <i class='bx bxs-cart-alt'></i>
+          <span>Đơn Hàng</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="AdminCustomers">
+          <i class='bx bxs-user-detail'></i>
+          <span>Khách Hàng</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" asp-action="Index" asp-controller="AdminAccount">
+          <i class='bx bxs-user-account'></i>
+          <span>Tài Khoản Admin</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="AdminNews">
+          <i class='bx bxs-news'></i>
+          <span>Tin Tức</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="AdminCategory">
+          <i class='bx bxs-category'></i>
+          <span>Danh Mục</span>
+        </a>
+      </li>
+
+      <li class="nav-title">Hệ thống</li>
+
+      <li class="nav-item">
+        <a class="nav-link" asp-action="AdminProfile" asp-controller="Home">
+          <i class='bx bxs-id-card'></i>
+          <span>Hồ Sơ: @Context.Session.GetString("TenKh")</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" asp-action="Index" asp-controller="AdminRole">
+          <i class='bx bxs-lock-alt'></i>
+          <span>Phân Quyền</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" asp-action="AdminChangePassword" asp-controller="Home" asp-area="Admin">
+          <i class='bx bxs-key'></i>
+          <span>Đổi Mật Khẩu</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Logout">
+          <i class='bx bxs-log-out'></i>
+          <span>Đăng Xuất</span>
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Navbar -->
+    <nav class="modern-navbar">
+      <div class="navbar-breadcrumb">
+        <ul class="breadcrumb">
+          <li class="breadcrumb-item"><a href="#">Admin</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+        </ul>
+      </div>
+      
+      <div class="navbar-actions">
+        <div class="input-group" style="margin-right: 1rem;">
+           <!-- Search placeholder if needed -->
+        </div>
+        <button class="btn-icon"><i class='bx bxs-bell'></i></button>
+        <button class="btn-icon"><i class='bx bxs-cog'></i></button>
+      </div>
+    </nav>
+
+    <!-- Content Body -->
+    <div class="container-fluid">
+      @RenderBody()
+    </div>
+  </main>
+
+  <!-- Core JS Files -->
+  <script src="~/assets/js/core/popper.min.js"></script>
+  <script src="~/assets/js/core/bootstrap.min.js"></script>
+  <script src="~/assets/js/plugins/perfect-scrollbar.min.js"></script>
+  <script src="~/assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script src="~/assets/js/plugins/chartjs.min.js"></script>
+  
+  <!-- Simple Sidebar Toggle Script -->
+  <script>
+    // Add active class to current link
+    document.addEventListener("DOMContentLoaded", function() {
+        var currentUrl = window.location.pathname;
+        var navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(function(link) {
+            if(link.getAttribute('href') === currentUrl) {
+                link.classList.add('active');
+            }
+        });
+    });
+  </script>
+
+  @RenderSection("Scripts", required: false)
+</body>
+</html>

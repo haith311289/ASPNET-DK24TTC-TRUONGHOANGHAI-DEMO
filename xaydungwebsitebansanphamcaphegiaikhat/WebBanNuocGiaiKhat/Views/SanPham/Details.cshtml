@@ -1,0 +1,200 @@
+﻿@using Microsoft.AspNetCore.Http
+@model WebBanNuocGiaiKhat.Models.SanPham
+
+@{
+    ViewData["Title"] = "Chi Tiết Sản Phẩm";
+    var bestSellers = ViewBag.BestSellers as IEnumerable<WebBanNuocGiaiKhat.Models.SanPham>;
+    var isLoggedIn = Context.Session.GetString("MaKh") != null;
+}
+
+<!-- Breadcrumb -->
+<div class="py-3" style="background: var(--light-bg);">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="SanPham">Sản phẩm</a></li>
+                <li class="breadcrumb-item active">Chi tiết</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<!-- Product Details -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="product-image-wrapper" style="padding-top: 100%; position: relative; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg);">
+                    <img src="@Model.AnhSp" alt="@Model.TenSp" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <h1 class="product-title" style="font-size: 2rem; font-weight: 700; margin-bottom: 1rem;">@Model.TenSp</h1>
+                <div class="product-price" style="font-size: 2rem; color: var(--primary-color); font-weight: 700; margin-bottom: 2rem;">
+                    @Model.GiaSp.ToString("#,##0") ₫
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.MotaSp))
+                {
+                    <div class="mb-4">
+                        <h5 style="font-weight: 600; margin-bottom: 1rem;">Mô tả sản phẩm</h5>
+                        <p style="color: var(--text-light); line-height: 1.8;">@Model.MotaSp</p>
+                    </div>
+                }
+
+                <div class="mb-4">
+                    <label for="txtsoLuong" style="font-weight: 600; display: block; margin-bottom: 0.5rem;">Số lượng:</label>
+                    <input id="txtsoLuong" name="txtsoLuong" max="100" min="1" step="1" value="1" type="number" 
+                           style="width: 100px; padding: 0.75rem; border: 2px solid var(--primary-color); border-radius: var(--radius-md); text-align: center; font-size: 1.1rem;">
+                </div>
+
+                <div class="d-flex gap-3">
+                    @if (isLoggedIn)
+                    {
+                        <button onclick="AddToCart(@Model.MaSp)" class="btn-modern btn-primary-modern flex-grow-1">
+                            <i class='bx bx-cart-add'></i> Thêm Vào Giỏ Hàng
+                        </button>
+                    }
+                    else
+                    {
+                        <a asp-action="Login" asp-controller="Home" class="btn-modern btn-secondary-modern flex-grow-1">
+                            <i class='bx bx-log-in'></i> Đăng Nhập Để Mua Hàng
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related Products -->
+@if (bestSellers != null && bestSellers.Any())
+{
+    <section class="py-5" style="background: var(--light-bg);">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Sản Phẩm Liên Quan</h2>
+                <p class="section-subtitle">Những sản phẩm bạn có thể quan tâm</p>
+            </div>
+            
+            <div class="row g-4">
+                @foreach (var item in bestSellers.Take(4))
+                {
+                    <div class="col-lg-3 col-md-6">
+                        <div class="product-card">
+                            <div class="product-image-wrapper">
+                                <img src="@item.AnhSp" class="product-image" alt="@item.TenSp">
+                                @if (item.BestSeller)
+                                {
+                                    <span class="product-badge">Bán Chạy</span>
+                                }
+                            </div>
+                            <div class="product-body">
+                                <div class="product-category">Nước giải khát</div>
+                                <h5 class="product-title">@item.TenSp</h5>
+                                <div class="product-price">@item.GiaSp.ToString("#,##0") ₫</div>
+                                <div class="product-actions">
+                                    <a asp-action="Details" asp-route-id="@item.MaSp" class="btn-modern btn-primary-modern flex-grow-1">
+                                        <i class='bx bx-show'></i> Xem
+                                    </a>
+                                    @if (isLoggedIn)
+                                    {
+                                        <button onclick="AddToCartList(@item.MaSp)" class="btn-icon">
+                                            <i class='bx bx-cart-add'></i>
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}
+
+@section Scripts {
+    <script>
+        function AddToCart(Id) {
+            $.ajax({
+                url: '/giohang/add-cart',
+                type: 'POST',
+                data: { maSP: Id, soLuong: $('#txtsoLuong').val() },
+                success: function (data) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Đã thêm vào giỏ hàng!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        location.reload();
+                    });
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Thất bại',
+                        text: 'Đã có lỗi xảy ra',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            });
+        }
+
+        function AddToCartList(Id) {
+            $.ajax({
+                url: '/giohang/add-cart',
+                type: 'POST',
+                data: { maSP: Id, soLuong: 1 },
+                success: function () {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Đã thêm vào giỏ hàng!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        location.reload();
+                    });
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Thất bại',
+                        text: 'Đã có lỗi xảy ra',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            });
+        }
+    </script>
+}
+
+<style>
+    .breadcrumb {
+        background: transparent;
+    }
+    
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: "›";
+        color: var(--text-light);
+    }
+    
+    .breadcrumb-item a {
+        color: var(--text-dark);
+        text-decoration: none;
+    }
+    
+    .breadcrumb-item a:hover {
+        color: var(--primary-color);
+    }
+    
+    .breadcrumb-item.active {
+        color: var(--primary-color);
+    }
+</style>

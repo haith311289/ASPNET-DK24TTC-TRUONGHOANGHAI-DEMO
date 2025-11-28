@@ -1,0 +1,247 @@
+﻿@model WebBanNuocGiaiKhat.Models.KhachHang
+
+@{
+    ViewData["Title"] = "Đăng Nhập";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập - Hải Trương</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    
+    <!-- Bootstrap -->
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/css/customer-modern.css" />
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+        
+        .auth-container {
+            max-width: 450px;
+            width: 100%;
+            padding: 0 1rem;
+        }
+        
+        .auth-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .auth-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .auth-header h2 {
+            margin: 0;
+            font-weight: 700;
+        }
+        
+        .auth-body {
+            padding: 2rem;
+        }
+        
+        .form-floating {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-floating > .form-control {
+            border: 2px solid #e0e0e0;
+            border-radius: var(--radius-md);
+            padding: 1rem 1rem 1rem 3rem;
+            height: 60px;
+        }
+        
+        .form-floating > .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25);
+        }
+        
+        .form-floating > label {
+            padding-left: 3rem;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 1.5rem;
+            z-index: 4;
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            background: var(--gradient-primary);
+            border: none;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+            color: white;
+        }
+        
+        .divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+        
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: #e0e0e0;
+        }
+        
+        .divider span {
+            background: white;
+            padding: 0 1rem;
+            position: relative;
+            color: var(--text-light);
+        }
+        
+        .social-login {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .social-btn:hover {
+            border-color: var(--primary-color);
+            background: var(--light-bg);
+        }
+        
+        .back-home {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            color: white;
+            font-size: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .back-home:hover {
+            color: var(--accent-color);
+            transform: translateX(-5px);
+        }
+    </style>
+</head>
+<body>
+    <a asp-action="Index" asp-controller="Home" class="back-home">
+        <i class='bx bx-arrow-back'></i>
+    </a>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <i class='bx bxs-drink' style="font-size: 3rem;"></i>
+                <h2 class="mt-2 text-uppercase">Hải Trương</h2>
+                <p class="mb-0" style="opacity: 0.9;">Chào mừng bạn trở lại!</p>
+            </div>
+            
+            <div class="auth-body">
+                <form asp-action="Login" method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                    
+                    <div class="form-floating position-relative">
+                        <i class='bx bx-envelope input-icon'></i>
+                        <input asp-for="Email" type="email" class="form-control" id="floatingEmail" placeholder="Email">
+                        <label for="floatingEmail">Email</label>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-floating position-relative">
+                        <i class='bx bx-lock-alt input-icon'></i>
+                        <input asp-for="Password" type="password" class="form-control" id="floatingPassword" placeholder="Mật khẩu">
+                        <label for="floatingPassword">Mật khẩu</label>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">
+                                Ghi nhớ đăng nhập
+                            </label>
+                        </div>
+                        <a href="#" style="color: var(--primary-color); text-decoration: none;">Quên mật khẩu?</a>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-login">
+                        <i class='bx bx-log-in'></i> Đăng Nhập
+                    </button>
+                </form>
+                
+                <div class="divider">
+                    <span>hoặc</span>
+                </div>
+                
+                <div class="text-center">
+                    <p class="mb-0">
+                        Chưa có tài khoản? 
+                        <a asp-action="Register" asp-controller="Home" style="color: var(--primary-color); font-weight: 600; text-decoration: none;">
+                            Đăng ký ngay
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-4">
+            <p class="text-white mb-0" style="opacity: 0.8;">
+                &copy; 2024 Hải Trương. All rights reserved.
+            </p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

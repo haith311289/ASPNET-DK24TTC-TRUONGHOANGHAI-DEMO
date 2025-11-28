@@ -1,0 +1,222 @@
+﻿@using Microsoft.AspNetCore.Http
+@using WebBanNuocGiaiKhat.Extension
+@using WebBanNuocGiaiKhat.ModelViews
+@{
+    List<WebBanNuocGiaiKhat.ModelViews.CartItem> lisSP = new List<WebBanNuocGiaiKhat.ModelViews.CartItem>();
+    var gio = Context.Session.Get<List<CartItem>>("GioHang");
+    int cartCount = gio != null ? gio.Sum(x => x.soLuong) : 0;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hải Trương - Premium Drinks</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/customer-modern.css" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg modern-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class='bx bxs-drink'></i> Hải Trương
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")" asp-action="Index" asp-controller="Home">
+                            <i class='bx bx-home-alt'></i> Trang Chủ
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "SanPham" ? "active" : "")" asp-action="Index" asp-controller="SanPham">
+                            <i class='bx bx-shopping-bag'></i> Sản Phẩm
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "TinTuc" ? "active" : "")" asp-action="Index" asp-controller="TinTuc">
+                            <i class='bx bx-news'></i> Tin Tức
+                        </a>
+                    </li>
+                </ul>
+                
+                <form asp-action="Search" asp-controller="SanPham" method="get" class="search-form mx-3">
+                    <div class="search-wrapper">
+                        <input type="text" name="keyword" class="search-input" placeholder="Tìm kiếm sản phẩm..." value="@ViewBag.Keyword" />
+                        <button type="submit" class="search-btn">
+                            <i class='bx bx-search'></i>
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="d-flex align-items-center gap-3">
+                    @if (Context.Session.GetString("MaKh") != null)
+                    {
+                        <a asp-action="Index" asp-controller="GioHang" class="btn-icon position-relative">
+                            <i class='bx bx-cart' style="font-size: 1.5rem;"></i>
+                            @if (cartCount > 0)
+                            {
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    @cartCount
+                                </span>
+                            }
+                        </a>
+                        
+                        <div class="dropdown">
+                            <button class="btn btn-theme dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class='bx bx-user'></i> @Context.Session.GetString("TenKh")
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" asp-action="UserDashboard" asp-controller="Home"><i class='bx bx-user-circle'></i> Tài khoản</a></li>
+                                <li><a class="dropdown-item" asp-action="Index" asp-controller="GioHang"><i class='bx bx-cart'></i> Giỏ hàng</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-action="Logout" asp-controller="Home"><i class='bx bx-log-out'></i> Đăng xuất</a></li>
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <a asp-action="Login" asp-controller="Home" class="btn-modern btn-primary-modern">
+                            <i class='bx bx-log-in'></i> Đăng nhập
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        @RenderBody()
+    </main>
+
+    <footer class="modern-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5 class="footer-title">Về Chúng Tôi</h5>
+                    <p style="color: rgba(255,255,255,0.7);">
+                        Cửa hàng nước giải khát uy tín, chất lượng cao với đa dạng sản phẩm phục vụ mọi nhu cầu của khách hàng.
+                    </p>
+                    <div class="d-flex gap-2 mt-3">
+                        <a href="#" class="btn-icon"><i class='bx bxl-facebook'></i></a>
+                        <a href="#" class="btn-icon"><i class='bx bxl-instagram'></i></a>
+                        <a href="#" class="btn-icon"><i class='bx bxl-twitter'></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <h5 class="footer-title">Liên Kết</h5>
+                    <a asp-action="Index" asp-controller="Home" class="footer-link">Trang chủ</a>
+                    <a asp-action="Index" asp-controller="SanPham" class="footer-link">Sản phẩm</a>
+                    <a asp-action="Index" asp-controller="TinTuc" class="footer-link">Tin tức</a>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <h5 class="footer-title">Liên Hệ</h5>
+                    <p style="color: rgba(255,255,255,0.7);">
+                        <i class='bx bx-map'></i> Số 123, Phường Bình Trưng, TPHCM<br>
+                        <i class='bx bx-phone'></i> 0903996584<br>
+                        <i class='bx bx-envelope'></i> info@nuocgiaikhat.com
+                    </p>
+                </div>
+            </div>
+            
+            <hr style="border-color: rgba(255,255,255,0.1);">
+            
+            <div class="text-center py-3">
+                <p style="color: rgba(255,255,255,0.5); margin: 0;">
+                    &copy; 2025 Hải Trương. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script type="text/javascript">
+        // Initialize Bootstrap dropdowns manually
+        document.addEventListener('DOMContentLoaded', function() {
+            var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
+            var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+                return new bootstrap.Dropdown(dropdownToggleEl);
+            });
+        });
+        
+        function AddToCartList(Id) {
+            $.ajax({
+                url: '/giohang/add-cart',
+                type: 'POST',
+                data: { maSP: Id, soLuong: 1 },
+                success: function () {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Đã thêm vào giỏ hàng!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        location.reload();
+                    });
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Thất bại',
+                        text: 'Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng',
+                        showConfirmButton: true
+                    });
+                }
+            });
+        }
+
+        function AddToCart(Id) {
+            $.ajax({
+                url: '/giohang/add-cart',
+                type: 'POST',
+                data: { maSP: Id, soLuong: $('#txtsoLuong').val() },
+                success: function (data) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Đã thêm vào giỏ hàng!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        location.reload();
+                    });
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Thất bại',
+                        text: 'Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng',
+                        showConfirmButton: true
+                    });
+                }
+            });
+        }
+
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 50) {
+                $('.modern-navbar').addClass('scrolled');
+            } else {
+                $('.modern-navbar').removeClass('scrolled');
+            }
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

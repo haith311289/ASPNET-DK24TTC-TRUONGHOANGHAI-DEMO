@@ -1,0 +1,134 @@
+@using Microsoft.AspNetCore.Http
+@using Microsoft.EntityFrameworkCore
+@model IEnumerable<WebBanNuocGiaiKhat.Models.SanPham>
+
+@{
+    ViewData["Title"] = "Tìm Kiếm Sản Phẩm";
+    var keyword = ViewBag.Keyword as string;
+    var searchCount = ViewBag.SearchCount as int? ?? 0;
+}
+
+<!-- Breadcrumb -->
+<div class="py-3" style="background: var(--light-bg);">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="SanPham">Sản phẩm</a></li>
+                <li class="breadcrumb-item active">Tìm kiếm</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<!-- Search Results Section -->
+<section class="py-5">
+    <div class="container">
+        <!-- Search Header -->
+        <div class="mb-4">
+            <h2 class="section-title">Kết Quả Tìm Kiếm</h2>
+            <p class="section-subtitle">
+                Tìm thấy <strong>@searchCount</strong> sản phẩm cho từ khóa "<strong>@keyword</strong>"
+            </p>
+        </div>
+
+        <!-- Search Results Grid -->
+        @if (Model.Any())
+        {
+            <div class="row g-4">
+                @foreach (var item in Model)
+                {
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="product-card">
+                            <div class="product-image-wrapper">
+                                <img src="@item.AnhSp" class="product-image" alt="@item.TenSp">
+                                @if (item.BestSeller)
+                                {
+                                    <span class="product-badge">Bán Chạy</span>
+                                }
+                            </div>
+                            <div class="product-body">
+                                <div class="product-category">@item.MaDmNavigation?.TenDm ?? "Nước giải khát"</div>
+                                <h5 class="product-title">@item.TenSp</h5>
+                                <div class="product-price">@item.GiaSp.ToString("#,##0") ₫</div>
+                                <div class="product-actions">
+                                    @if (Context.Session.GetString("MaKh") != null)
+                                    {
+                                        <a asp-action="Details" asp-route-id="@item.MaSp" class="btn-modern btn-primary-modern flex-grow-1">
+                                            <i class='bx bx-show'></i> Xem
+                                        </a>
+                                        <button onclick="AddToCartList(@item.MaSp)" class="btn-icon">
+                                            <i class='bx bx-cart-add'></i>
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="Details" asp-route-id="@item.MaSp" class="btn-modern btn-primary-modern flex-grow-1">
+                                            <i class='bx bx-show'></i> Xem
+                                        </a>
+                                        <a asp-action="Login" asp-controller="Home" class="btn-icon">
+                                            <i class='bx bx-cart-add'></i>
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class='bx bx-search-alt' style="font-size: 5rem; color: var(--text-light);"></i>
+                <h4 class="mt-3">Không tìm thấy sản phẩm nào</h4>
+                <p class="text-muted">Không có sản phẩm nào phù hợp với từ khóa "<strong>@keyword</strong>"</p>
+                <a asp-action="Index" asp-controller="SanPham" class="btn-modern btn-primary-modern mt-3">
+                    <i class='bx bx-arrow-back'></i> Quay lại danh sách sản phẩm
+                </a>
+            </div>
+        }
+
+        <!-- Search Tips -->
+        @if (!Model.Any())
+        {
+            <div class="mt-5">
+                <div class="card" style="border: none; box-shadow: var(--shadow-md); border-radius: var(--radius-lg);">
+                    <div class="card-body p-4">
+                        <h5 class="mb-3"><i class='bx bx-bulb'></i> Gợi ý tìm kiếm</h5>
+                        <ul class="mb-0" style="color: var(--text-light);">
+                            <li>Kiểm tra lại chính tả của từ khóa</li>
+                            <li>Thử sử dụng từ khóa ngắn gọn hơn</li>
+                            <li>Thử tìm kiếm với từ khóa khác</li>
+                            <li>Xem tất cả sản phẩm trong <a asp-action="Index" asp-controller="SanPham">danh mục</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<style>
+    .breadcrumb {
+        background: transparent;
+    }
+    
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: "›";
+        color: var(--text-light);
+    }
+    
+    .breadcrumb-item a {
+        color: var(--text-dark);
+        text-decoration: none;
+    }
+    
+    .breadcrumb-item a:hover {
+        color: var(--primary-color);
+    }
+    
+    .breadcrumb-item.active {
+        color: var(--primary-color);
+    }
+</style>

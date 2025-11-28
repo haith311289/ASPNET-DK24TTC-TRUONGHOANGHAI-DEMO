@@ -1,0 +1,137 @@
+@model WebBanNuocGiaiKhat.Models.DonHang
+
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header pb-0">
+                    <h6>Chi tiết đơn hàng #@Model.MaDh</h6>
+                </div>
+                <div class="card-body px-0 pt-0 pb-2">
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sản phẩm</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Số lượng</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Đơn giá</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ChiTietDonHangs)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex px-2 py-1">
+                                                <div>
+                                                    <img src="~/images/products/@item.MaSpNavigation.AnhSp" class="avatar avatar-sm me-3" alt="@item.MaSpNavigation.TenSp">
+                                                </div>
+                                                <div class="d-flex flex-column justify-content-center">
+                                                    <h6 class="mb-0 text-sm">@item.MaSpNavigation.TenSp</h6>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">@item.SoLuong</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">@item.MaSpNavigation.GiaSp.ToString("N0") VNĐ</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">@item.TongTien.ToString("N0") VNĐ</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header pb-0">
+                    <h6>Thông tin khách hàng</h6>
+                </div>
+                <div class="card-body">
+                    <p class="text-sm"><strong>Họ tên:</strong> @Model.MaKhNavigation.TenKh</p>
+                    <p class="text-sm"><strong>Email:</strong> @Model.MaKhNavigation.Email</p>
+                    <p class="text-sm"><strong>Địa chỉ:</strong> @Model.MaKhNavigation.Diachi</p>
+                    <p class="text-sm"><strong>Ngày đặt:</strong> @Model.NgayTao.ToString("dd/MM/yyyy HH:mm")</p>
+                    <p class="text-sm"><strong>Ghi chú:</strong> @Model.Note</p>
+                    <hr />
+                    <p class="text-sm"><strong>Tổng tiền:</strong> <span class="text-danger font-weight-bold">@Model.TongTien.ToString("N0") VNĐ</span></p>
+                    <p class="text-sm">
+                        <strong>Trạng thái thanh toán:</strong>
+                        @if (Model.ThanhToan)
+                        {
+                            <span class="badge badge-sm bg-gradient-success">Đã thanh toán</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-sm bg-gradient-warning">Chưa thanh toán</span>
+                        }
+                    </p>
+                </div>
+            </div>
+            <div class="card">
+                 <div class="card-header pb-0">
+                    <h6>Trạng thái đơn hàng</h6>
+                </div>
+                <div class="card-body">
+                    @if(Model.TrangThaiDhs != null && Model.TrangThaiDhs.Any())
+                    {
+                        <ul class="list-group">
+                            @foreach(var status in Model.TrangThaiDhs)
+                            {
+                                <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                                    <div class="d-flex align-items-center">
+                                        <div class="d-flex flex-column">
+                                            <h6 class="mb-1 text-dark text-sm">@status.TrangThai</h6>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-sm text-secondary">Chưa có trạng thái nào.</p>
+                    }
+                </div>
+                <div class="card-footer">
+                    <h6>Cập nhật trạng thái</h6>
+                    <form asp-action="UpdateStatus" method="post">
+                        <input type="hidden" name="MaDh" value="@Model.MaDh" />
+                        <div class="form-group">
+                            <label class="form-control-label">Trạng thái</label>
+                            <select name="TrangThai" class="form-control">
+                                <option value="Đang xử lý">Đang xử lý</option>
+                                <option value="Đang đóng gói">Đang đóng gói</option>
+                                <option value="Đang giao hàng">Đang giao hàng</option>
+                                <option value="Đã giao hàng">Đã giao hàng</option>
+                                <option value="Đã hủy">Đã hủy</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label">Mô tả</label>
+                            <textarea name="Mota" class="form-control" rows="2"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm">Cập nhật</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
+        </div>
+    </div>
+</div>

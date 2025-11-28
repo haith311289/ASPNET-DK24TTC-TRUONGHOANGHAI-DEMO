@@ -1,0 +1,171 @@
+﻿@using Microsoft.AspNetCore.Http
+@model IEnumerable<WebBanNuocGiaiKhat.Models.DonHang>
+
+@{
+    ViewData["Title"] = "Lịch Sử Đơn Hàng";
+    var tenKh = Context.Session.GetString("TenKh");
+    // Giả sử email chưa có trong session, ta có thể để trống hoặc cập nhật sau
+    var email = Context.Session.GetString("Email") ?? "Khách hàng thân thiết"; 
+}
+
+<!-- Breadcrumb -->
+<div class="py-3" style="background: var(--light-bg);">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a asp-action="UserDashboard" asp-controller="Home">Tài khoản</a></li>
+                <li class="breadcrumb-item active">Lịch sử đơn hàng</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Sidebar -->
+            <div class="col-lg-3">
+                <div class="card border-0 shadow-sm rounded-3">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle" style="width: 80px; height: 80px;">
+                                <i class='bx bx-user' style="font-size: 40px; color: var(--primary-color);"></i>
+                            </div>
+                        </div>
+                        <h5 class="mb-1">@tenKh</h5>
+                        <p class="text-muted small mb-0">@email</p>
+                    </div>
+                    <div class="list-group list-group-flush rounded-bottom-3">
+                        <a asp-action="UserDashboard" asp-controller="Home" class="list-group-item list-group-item-action border-0 py-3">
+                            <i class='bx bx-user-circle me-2'></i> Thông tin tài khoản
+                        </a>
+                        <a asp-action="ChangePassword" asp-controller="Home" class="list-group-item list-group-item-action border-0 py-3">
+                            <i class='bx bx-lock-alt me-2'></i> Đổi mật khẩu
+                        </a>
+                        <a asp-action="Index" asp-controller="DonHangs" class="list-group-item list-group-item-action active border-0 py-3">
+                            <i class='bx bx-shopping-bag me-2'></i> Lịch sử đơn hàng
+                        </a>
+                        <a asp-action="Logout" asp-controller="Home" class="list-group-item list-group-item-action border-0 py-3 text-danger">
+                            <i class='bx bx-log-out me-2'></i> Đăng xuất
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="col-lg-9">
+                <div class="card border-0 shadow-sm rounded-3">
+                    <div class="card-header bg-white border-bottom py-3">
+                        <h5 class="mb-0 fw-bold"><i class='bx bx-list-ul'></i> Danh Sách Đơn Hàng</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        @if (!Model.Any())
+                        {
+                            <div class="text-center p-5">
+                                <img src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png" alt="Empty Order" style="width: 100px; opacity: 0.5;" class="mb-3">
+                                <h5>Bạn chưa có đơn hàng nào</h5>
+                                <p class="text-muted">Hãy dạo một vòng và chọn cho mình những món đồ uống yêu thích nhé!</p>
+                                <a asp-controller="SanPham" asp-action="Index" class="btn-modern btn-primary-modern mt-2">
+                                    Mua sắm ngay
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0 align-middle">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th class="py-3 ps-4">Mã ĐH</th>
+                                            <th class="py-3">Ngày Đặt</th>
+                                            <th class="py-3">Tổng Tiền</th>
+                                            <th class="py-3">Trạng Thái</th>
+                                            <th class="py-3 text-end pe-4">Thao Tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <td class="ps-4 fw-bold text-primary">#@item.MaDh</td>
+                                                <td>@item.NgayTao.ToString("dd/MM/yyyy HH:mm")</td>
+                                                <td class="fw-bold text-danger">@item.TongTien.ToString("#,##0") VNĐ</td>
+                                                <td>
+                                                    @if (item.TrangThaiHuyDon)
+                                                    {
+                                                        <span class="badge badge-status cancelled">Đã hủy</span>
+                                                    }
+                                                    else if (item.ThanhToan)
+                                                    {
+                                                        <span class="badge badge-status paid">Đã thanh toán</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-status processing">Đang xử lý</span>
+                                                    }
+                                                </td>
+                                                <td class="text-end pe-4">
+                                                    <a asp-action="Details" asp-route-id="@item.MaDh" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                                        Xem chi tiết
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .list-group-item {
+        transition: all 0.3s ease;
+        font-weight: 500;
+        color: var(--text-dark);
+    }
+    
+    .list-group-item:hover {
+        background-color: rgba(255, 107, 107, 0.05);
+        color: var(--primary-color);
+        padding-left: 1.5rem;
+    }
+    
+    .list-group-item.active {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        color: white;
+    }
+    
+    .list-group-item.active:hover {
+        background-color: var(--primary-dark);
+        padding-left: 1.25rem;
+    }
+    
+    .table th {
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    /* Breadcrumb styles */
+    .breadcrumb-item a {
+        color: var(--text-light);
+        text-decoration: none;
+    }
+    
+    .breadcrumb-item.active {
+        color: var(--primary-color);
+        font-weight: 500;
+    }
+    
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: "›";
+    }
+</style>

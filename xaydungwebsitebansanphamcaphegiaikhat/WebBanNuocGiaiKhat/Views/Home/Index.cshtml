@@ -1,0 +1,124 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.EntityFrameworkCore
+@model IEnumerable<WebBanNuocGiaiKhat.Models.SanPham>
+@{
+    ViewData["Title"] = "Trang Chủ";
+    var spBanChay = Model.Where(x => x.BestSeller == true);
+}
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center">
+            <div class="col-lg-6 hero-content">
+                <h1 class="hero-title">Hải Trương - Hương Vị Tuyệt Hảo</h1>
+                <p class="hero-subtitle mb-4">Khám phá thế giới đồ uống tươi mát, sảng khoái và đầy năng lượng. Chất lượng thượng hạng cho trải nghiệm đỉnh cao.</p>
+                <div class="d-flex gap-3">
+                    <a href="#featured-products" class="btn-modern btn-primary-modern">
+                        <i class='bx bx-shopping-bag'></i> Mua Ngay
+                    </a>
+                    <a href="#about-us" class="btn-modern btn-secondary-modern">
+                        <i class='bx bx-info-circle'></i> Tìm Hiểu Thêm
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block">
+                <!-- Hero Image/Illustration could go here -->
+                <img src="https://images.unsplash.com/photo-1595981267035-7b04ca84a82d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Hero Image" class="img-fluid animation-float" style="max-height: 400px; margin-left: auto; display: block; border-radius: 20px;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products Section -->
+<section class="py-5" id="featured-products">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Sản Phẩm Nổi Bật</h2>
+            <p class="section-subtitle">Những sản phẩm được yêu thích nhất</p>
+        </div>
+        
+        <div class="row g-4">
+            @foreach (var item in spBanChay.Take(8))
+            {
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product-card">
+                        <div class="product-image-wrapper">
+                            <img src="@item.AnhSp" class="product-image" alt="@item.TenSp">
+                            @if (item.BestSeller)
+                            {
+                                <span class="product-badge">Bán Chạy</span>
+                            }
+                        </div>
+                        <div class="product-body">
+                            <div class="product-category">Nước giải khát</div>
+                            <h5 class="product-title">@item.TenSp</h5>
+                            <div class="product-price">@item.GiaSp.ToString("#,##0") ₫</div>
+                            <div class="product-actions">
+                                <a asp-action="Details" asp-controller="SanPham" asp-route-id="@item.MaSp" class="btn-modern btn-primary-modern flex-grow-1">
+                                    <i class='bx bx-show'></i> Xem
+                                </a>
+                                @if (Context.Session.GetString("MaKh") != null)
+                                {
+                                    <button onclick="AddToCartList(@item.MaSp)" class="btn-icon">
+                                        <i class='bx bx-cart-add'></i>
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        
+        <div class="text-center mt-5">
+            <a asp-action="Index" asp-controller="SanPham" class="btn-modern btn-primary-modern">
+                <i class='bx bx-grid-alt'></i> Xem Tất Cả Sản Phẩm
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);" id="about-us">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="text-center p-4">
+                    <div class="mb-3">
+                        <i class='bx bxs-truck' style="font-size: 3rem; color: var(--primary-color);"></i>
+                    </div>
+                    <h5 class="fw-bold">Giao Hàng Nhanh</h5>
+                    <p class="text-muted mb-0">Miễn phí vận chuyển cho đơn hàng trên 200K</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="text-center p-4">
+                    <div class="mb-3">
+                        <i class='bx bxs-badge-check' style="font-size: 3rem; color: var(--secondary-color);"></i>
+                    </div>
+                    <h5 class="fw-bold">Chất Lượng Đảm Bảo</h5>
+                    <p class="text-muted mb-0">100% sản phẩm chính hãng</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="text-center p-4">
+                    <div class="mb-3">
+                        <i class='bx bxs-phone-call' style="font-size: 3rem; color: var(--accent-color);"></i>
+                    </div>
+                    <h5 class="fw-bold">Hỗ Trợ 24/7</h5>
+                    <p class="text-muted mb-0">Luôn sẵn sàng hỗ trợ khách hàng</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="text-center p-4">
+                    <div class="mb-3">
+                        <i class='bx bxs-credit-card' style="font-size: 3rem; color: var(--primary-dark);"></i>
+                    </div>
+                    <h5 class="fw-bold">Thanh Toán An Toàn</h5>
+                    <p class="text-muted mb-0">Nhiều hình thức thanh toán</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

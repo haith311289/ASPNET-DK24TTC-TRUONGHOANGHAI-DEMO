@@ -1,0 +1,71 @@
+@model IEnumerable<WebBanNuocGiaiKhat.Models.DonHang>
+
+@{
+    ViewData["Title"] = "Danh sách đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header pb-0">
+                <h6>Danh sách đơn hàng</h6>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Mã ĐH</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Khách hàng</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ngày tạo</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tổng tiền</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Thanh toán</th>
+                                <th class="text-secondary opacity-7"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex px-2 py-1">
+                                            <div class="d-flex flex-column justify-content-center">
+                                                <h6 class="mb-0 text-sm">#@item.MaDh</h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <p class="text-xs font-weight-bold mb-0">@item.MaKhNavigation.TenKh</p>
+                                        <p class="text-xs text-secondary mb-0">@item.MaKhNavigation.Email</p>
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        <span class="text-secondary text-xs font-weight-bold">@item.NgayTao.ToString("dd/MM/yyyy")</span>
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        <span class="text-secondary text-xs font-weight-bold">@item.TongTien.ToString("N0") VNĐ</span>
+                                    </td>
+                                    <td class="align-middle text-center text-sm">
+                                        @if (item.ThanhToan)
+                                        {
+                                            <span class="badge badge-sm bg-gradient-success">Đã thanh toán</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-sm bg-gradient-warning">Chưa thanh toán</span>
+                                        }
+                                    </td>
+                                    <td class="align-middle">
+                                        <a asp-action="Details" asp-route-id="@item.MaDh" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                                            Chi tiết
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

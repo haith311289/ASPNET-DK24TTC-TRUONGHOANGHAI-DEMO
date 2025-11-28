@@ -1,0 +1,190 @@
+﻿@model WebBanNuocGiaiKhat.Models.KhachHang
+@{
+    ViewData["Title"] = "Thông Tin Tài Khoản";
+}
+
+<!-- Breadcrumb -->
+<div class="py-3" style="background: var(--light-bg);">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+                <li class="breadcrumb-item active">Tài khoản của tôi</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Sidebar -->
+            <div class="col-lg-3">
+                <div class="card border-0 shadow-sm rounded-3">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle" style="width: 80px; height: 80px;">
+                                <i class='bx bx-user' style="font-size: 40px; color: var(--primary-color);"></i>
+                            </div>
+                        </div>
+                        <h5 class="mb-1">@Model.TenKh</h5>
+                        <p class="text-muted small mb-0">@Model.Email</p>
+                    </div>
+                    <div class="list-group list-group-flush rounded-bottom-3">
+                        <a asp-action="UserDashboard" asp-controller="Home" class="list-group-item list-group-item-action active border-0 py-3">
+                            <i class='bx bx-user-circle me-2'></i> Thông tin tài khoản
+                        </a>
+                        <a asp-action="ChangePassword" asp-controller="Home" class="list-group-item list-group-item-action border-0 py-3">
+                            <i class='bx bx-lock-alt me-2'></i> Đổi mật khẩu
+                        </a>
+                        <a asp-action="Index" asp-controller="DonHangs" class="list-group-item list-group-item-action border-0 py-3">
+                            <i class='bx bx-shopping-bag me-2'></i> Lịch sử đơn hàng
+                        </a>
+                        <a asp-action="Logout" asp-controller="Home" class="list-group-item list-group-item-action border-0 py-3 text-danger">
+                            <i class='bx bx-log-out me-2'></i> Đăng xuất
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="col-lg-9">
+                <div class="card border-0 shadow-sm rounded-3">
+                    <div class="card-header bg-white border-bottom py-3">
+                        <h5 class="mb-0 fw-bold"><i class='bx bx-edit'></i> Cập Nhật Thông Tin</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <form asp-action="UserDashboard" method="post">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                            <input type="hidden" asp-for="MaKh" />
+                            <input type="hidden" asp-for="Password" />
+
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <label asp-for="TenKh" class="form-label fw-bold">Họ và tên</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0"><i class='bx bx-user'></i></span>
+                                        <input asp-for="TenKh" type="text" class="form-control border-start-0 ps-0" placeholder="Nhập họ tên">
+                                    </div>
+                                    <span asp-validation-for="TenKh" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label asp-for="Phone" class="form-label fw-bold">Số điện thoại</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0"><i class='bx bx-phone'></i></span>
+                                        <input asp-for="Phone" type="tel" class="form-control border-start-0 ps-0" placeholder="Nhập số điện thoại">
+                                    </div>
+                                    <span asp-validation-for="Phone" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label asp-for="Email" class="form-label fw-bold">Email</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0"><i class='bx bx-envelope'></i></span>
+                                        <input asp-for="Email" type="email" class="form-control border-start-0 ps-0" readonly style="background-color: #f8f9fa;">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label asp-for="Ngaysinh" class="form-label fw-bold">Ngày sinh</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0"><i class='bx bx-calendar'></i></span>
+                                        <input asp-for="Ngaysinh" type="date" class="form-control border-start-0 ps-0">
+                                    </div>
+                                    <span asp-validation-for="Ngaysinh" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label asp-for="GioiTinh" class="form-label fw-bold">Giới tính</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0"><i class='bx bx-male-female'></i></span>
+                                        <select asp-for="GioiTinh" class="form-select border-start-0 ps-0">
+                                            <option value="">Chọn giới tính</option>
+                                            <option value="Nam">Nam</option>
+                                            <option value="Nữ">Nữ</option>
+                                        </select>
+                                    </div>
+                                    <span asp-validation-for="GioiTinh" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-12">
+                                    <label asp-for="Diachi" class="form-label fw-bold">Địa chỉ</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0"><i class='bx bx-map'></i></span>
+                                        <input asp-for="Diachi" type="text" class="form-control border-start-0 ps-0" placeholder="Nhập địa chỉ chi tiết">
+                                    </div>
+                                    <span asp-validation-for="Diachi" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-12 mt-4 text-end">
+                                    <button type="submit" class="btn-modern btn-primary-modern px-4">
+                                        <i class='bx bx-save'></i> Lưu Thay Đổi
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .list-group-item {
+        transition: all 0.3s ease;
+        font-weight: 500;
+        color: var(--text-dark);
+    }
+    
+    .list-group-item:hover {
+        background-color: rgba(255, 107, 107, 0.05);
+        color: var(--primary-color);
+        padding-left: 1.5rem;
+    }
+    
+    .list-group-item.active {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        color: white;
+    }
+    
+    .list-group-item.active:hover {
+        background-color: var(--primary-dark);
+        padding-left: 1.25rem;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        box-shadow: none;
+        border-color: var(--primary-color);
+    }
+    
+    .input-group-text {
+        color: var(--text-light);
+    }
+    
+    .form-control:focus + .input-group-text,
+    .form-control:focus ~ .input-group-text {
+        color: var(--primary-color);
+    }
+    
+    /* Breadcrumb styles */
+    .breadcrumb-item a {
+        color: var(--text-light);
+        text-decoration: none;
+    }
+    
+    .breadcrumb-item.active {
+        color: var(--primary-color);
+        font-weight: 500;
+    }
+    
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: "›";
+    }
+</style>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

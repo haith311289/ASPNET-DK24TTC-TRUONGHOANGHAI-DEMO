@@ -1,0 +1,183 @@
+﻿@using Microsoft.AspNetCore.Http
+@using WebBanNuocGiaiKhat.Extension
+@using WebBanNuocGiaiKhat.ModelViews
+@model WebBanNuocGiaiKhat.Models.KhachHang
+@{
+    ViewData["Title"] = "Thanh Toán";
+    var cartCheckout = Context.Session.Get<List<CartItem>>("GioHang");
+}
+
+<!-- Breadcrumb -->
+<div class="py-3" style="background: var(--light-bg);">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="GioHang">Giỏ hàng</a></li>
+                <li class="breadcrumb-item active">Thanh toán</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<!-- Checkout Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Thanh Toán</h2>
+            <p class="section-subtitle">Vui lòng kiểm tra thông tin trước khi đặt hàng</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Checkout Form -->
+            <div class="col-lg-7">
+                <div class="card" style="border: none; box-shadow: var(--shadow-md); border-radius: var(--radius-lg);">
+                    <div class="card-header" style="background: var(--white); border-bottom: 2px solid var(--light-bg); padding: 1.5rem;">
+                        <h5 class="mb-0"><i class='bx bx-user'></i> Thông Tin Người Nhận</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <form asp-action="Index" method="post">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                            <input type="hidden" asp-for="MaKh" />
+                            <input type="hidden" asp-for="Password" />
+                            
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label asp-for="TenKh" class="form-label fw-bold">Họ và tên <span class="text-danger">*</span></label>
+                                    <input asp-for="TenKh" type="text" class="form-control" placeholder="Nhập họ tên">
+                                    <span asp-validation-for="TenKh" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label asp-for="Phone" class="form-label fw-bold">Số điện thoại <span class="text-danger">*</span></label>
+                                    <input asp-for="Phone" type="tel" class="form-control" placeholder="Nhập số điện thoại">
+                                    <span asp-validation-for="Phone" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mt-1">
+                                <div class="col-md-6">
+                                    <label asp-for="Email" class="form-label fw-bold">Email</label>
+                                    <input asp-for="Email" type="email" class="form-control" readonly>
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label asp-for="Ngaysinh" class="form-label fw-bold">Ngày sinh</label>
+                                    <input asp-for="Ngaysinh" type="date" class="form-control">
+                                    <span asp-validation-for="Ngaysinh" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                <label asp-for="Diachi" class="form-label fw-bold">Địa chỉ giao hàng <span class="text-danger">*</span></label>
+                                <textarea asp-for="Diachi" class="form-control" rows="3" placeholder="Nhập địa chỉ chi tiết"></textarea>
+                                <span asp-validation-for="Diachi" class="text-danger"></span>
+                            </div>
+
+                            <div class="mt-4">
+                                <h6 class="fw-bold mb-3"><i class='bx bx-credit-card'></i> Hình Thức Thanh Toán</h6>
+                                <div class="form-check p-3" style="background: var(--light-bg); border-radius: var(--radius-md);">
+                                    <input class="form-check-input" type="radio" name="HinhThucTT" id="cod" value="Thanh Toán Khi Nhận" checked>
+                                    <label class="form-check-label fw-bold" for="cod">
+                                        <i class='bx bx-money'></i> Thanh Toán Khi Nhận Hàng (COD)
+                                    </label>
+                                    <p class="text-muted mb-0 mt-2" style="font-size: 0.9rem;">Thanh toán bằng tiền mặt khi nhận hàng</p>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 d-grid">
+                                <button type="submit" class="btn-modern btn-primary-modern" style="padding: 1rem;">
+                                    <i class='bx bx-check-circle'></i> Xác Nhận Đặt Hàng
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="col-lg-5">
+                <div class="card" style="border: none; box-shadow: var(--shadow-md); border-radius: var(--radius-lg); position: sticky; top: 20px;">
+                    <div class="card-header" style="background: var(--gradient-primary); color: white; padding: 1.5rem; border-radius: var(--radius-lg) var(--radius-lg) 0 0;">
+                        <h5 class="mb-0"><i class='bx bx-receipt'></i> Đơn Hàng Của Bạn</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div style="max-height: 400px; overflow-y: auto;">
+                            @foreach (var item in cartCheckout)
+                            {
+                                <div class="d-flex align-items-center p-3 border-bottom">
+                                    <img src="@item.sanPham.AnhSp" alt="@item.sanPham.TenSp" style="width: 60px; height: 60px; object-fit: cover; border-radius: var(--radius-md);">
+                                    <div class="ms-3 flex-grow-1">
+                                        <h6 class="mb-1" style="font-size: 0.9rem;">@item.sanPham.TenSp</h6>
+                                        <p class="mb-0 text-muted" style="font-size: 0.85rem;">
+                                            @item.sanPham.GiaSp.ToString("#,##0") ₫ × @item.soLuong
+                                        </p>
+                                    </div>
+                                    <div class="text-end">
+                                        <p class="mb-0 fw-bold" style="color: var(--primary-color);">
+                                            @item.TongTien.ToString("#,##0") ₫
+                                        </p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="card-footer" style="background: var(--white); padding: 1.5rem;">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Tạm tính:</span>
+                            <span class="fw-bold">@cartCheckout.Sum(x=> x.TongTien).ToString("#,##0") ₫</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Phí vận chuyển:</span>
+                            <span class="fw-bold" style="color: var(--secondary-color);">Miễn phí</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <span style="font-size: 1.2rem; font-weight: 700;">Tổng cộng:</span>
+                            <span style="font-size: 1.5rem; font-weight: 700; color: var(--primary-color);">
+                                @cartCheckout.Sum(x=> x.TongTien).ToString("#,##0") ₫
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3 p-3" style="background: var(--light-bg); border-radius: var(--radius-md);">
+                    <h6 class="fw-bold mb-2"><i class='bx bx-info-circle'></i> Lưu ý</h6>
+                    <ul class="mb-0" style="font-size: 0.9rem; color: var(--text-light);">
+                        <li>Vui lòng kiểm tra kỹ thông tin trước khi đặt hàng</li>
+                        <li>Đơn hàng sẽ được giao trong 2-3 ngày</li>
+                        <li>Miễn phí vận chuyển cho đơn hàng trên 200.000₫</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<style>
+    .breadcrumb {
+        background: transparent;
+    }
+    
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: "›";
+        color: var(--text-light);
+    }
+    
+    .breadcrumb-item a {
+        color: var(--text-dark);
+        text-decoration: none;
+    }
+    
+    .breadcrumb-item a:hover {
+        color: var(--primary-color);
+    }
+    
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25);
+    }
+</style>

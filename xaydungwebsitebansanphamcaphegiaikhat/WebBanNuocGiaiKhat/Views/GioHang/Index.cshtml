@@ -1,0 +1,242 @@
+﻿@using Microsoft.AspNetCore.Http
+@model List<WebBanNuocGiaiKhat.ModelViews.CartItem>
+@{
+    ViewData["Title"] = "Giỏ Hàng";
+}
+
+<!-- Breadcrumb -->
+<div class="py-3" style="background: var(--light-bg);">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+                <li class="breadcrumb-item active">Giỏ hàng</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<!-- Shopping Cart -->
+<section class="py-5">
+    <div class="container">
+        @if(Model != null && Model.Count() > 0)
+        {
+            <div class="row g-4">
+                <!-- Cart Items -->
+                <div class="col-lg-8">
+                    <div class="card" style="border: none; box-shadow: var(--shadow-md); border-radius: var(--radius-lg);">
+                        <div class="card-header" style="background: var(--white); border-bottom: 2px solid var(--light-bg); padding: 1.5rem;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h4 class="mb-0"><i class='bx bx-cart'></i> Giỏ Hàng Của Bạn</h4>
+                                <span class="badge" style="background: var(--gradient-primary); padding: 0.5rem 1rem;">@Model.Count() sản phẩm</span>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            @foreach (var item in Model)
+                            {
+                                <div class="cart-item" style="padding: 1.5rem; border-bottom: 1px solid var(--light-bg); transition: all 0.3s ease;">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-2">
+                                            <img src="@item.sanPham.AnhSp" alt="@item.sanPham.TenSp" style="width: 100%; border-radius: var(--radius-md); object-fit: cover;">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h6 class="mb-1" style="font-weight: 600;">@item.sanPham.TenSp</h6>
+                                            <p class="mb-0 text-muted" style="font-size: 0.9rem;">Đơn giá: @item.sanPham.GiaSp.ToString("#,##0") ₫</p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="input-group" style="max-width: 150px;">
+                                                <button class="btn btn-outline-secondary" type="button" onclick="decreaseQty(@item.sanPham.MaSp)">
+                                                    <i class='bx bx-minus'></i>
+                                                </button>
+                                                <input type="number" id="qty_@item.sanPham.MaSp" class="form-control text-center" value="@item.soLuong" min="1" max="100" readonly>
+                                                <button class="btn btn-outline-secondary" type="button" onclick="increaseQty(@item.sanPham.MaSp)">
+                                                    <i class='bx bx-plus'></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 text-end">
+                                            <p class="mb-0" style="font-size: 1.1rem; font-weight: 700; color: var(--primary-color);">
+                                                @item.TongTien.ToString("#,##0") ₫
+                                            </p>
+                                        </div>
+                                        <div class="col-md-1 text-end">
+                                            <button onclick="RemoveCart(@item.sanPham.MaSp)" class="btn btn-sm btn-outline-danger">
+                                                <i class='bx bx-trash'></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="card-footer" style="background: var(--light-bg); padding: 1.5rem;">
+                            <button onclick="CleanCart()" class="btn btn-outline-danger">
+                                <i class='bx bx-trash'></i> Xóa Tất Cả
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="col-lg-4">
+                    <div class="card" style="border: none; box-shadow: var(--shadow-md); border-radius: var(--radius-lg); position: sticky; top: 20px;">
+                        <div class="card-header" style="background: var(--gradient-primary); color: white; padding: 1.5rem; border-radius: var(--radius-lg) var(--radius-lg) 0 0;">
+                            <h5 class="mb-0"><i class='bx bx-receipt'></i> Tổng Đơn Hàng</h5>
+                        </div>
+                        <div class="card-body" style="padding: 1.5rem;">
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Tạm tính:</span>
+                                <span style="font-weight: 600;">@Model.Sum(x=> x.TongTien).ToString("#,##0") ₫</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Phí vận chuyển:</span>
+                                <span style="font-weight: 600; color: var(--secondary-color);">Miễn phí</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between mb-4">
+                                <span style="font-size: 1.2rem; font-weight: 700;">Tổng cộng:</span>
+                                <span style="font-size: 1.5rem; font-weight: 700; color: var(--primary-color);">@Model.Sum(x=> x.TongTien).ToString("#,##0") ₫</span>
+                            </div>
+                            <a asp-action="Index" asp-controller="Checkout" class="btn-modern btn-primary-modern w-100 mb-3">
+                                <i class='bx bx-credit-card'></i> Thanh Toán
+                            </a>
+                            <a asp-action="Index" asp-controller="SanPham" class="btn-modern btn-secondary-modern w-100">
+                                <i class='bx bx-arrow-back'></i> Tiếp Tục Mua Hàng
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <!-- Empty Cart -->
+            <div class="text-center py-5">
+                <i class='bx bx-cart' style="font-size: 8rem; color: var(--text-light);"></i>
+                <h3 class="mt-4">Giỏ Hàng Của Bạn Đang Trống</h3>
+                <p class="text-muted mb-4">Hãy thêm sản phẩm vào giỏ hàng để tiếp tục mua sắm</p>
+                <a asp-action="Index" asp-controller="SanPham" class="btn-modern btn-primary-modern">
+                    <i class='bx bx-shopping-bag'></i> Khám Phá Sản Phẩm
+                </a>
+            </div>
+        }
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        function RemoveCart(Id) {
+            Swal.fire({
+                title: 'Xác nhận xóa?',
+                text: "Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#FF6B6B',
+                cancelButtonColor: '#6C757D',
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/giohang/remove',
+                        type: 'POST',
+                        data: { maSP: Id },
+                        success: function(data) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Đã xóa!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Thất bại',
+                                text: 'Đã có lỗi xảy ra'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        function CleanCart() {
+            Swal.fire({
+                title: 'Xóa tất cả?',
+                text: "Bạn có chắc muốn xóa tất cả sản phẩm trong giỏ hàng?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#FF6B6B',
+                cancelButtonColor: '#6C757D',
+                confirmButtonText: 'Xóa tất cả',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/GioHang/CleanCart';
+                }
+            });
+        }
+
+        function UpdateCart(Id, qty) {
+            $.ajax({
+                url: '/giohang/update-cart',
+                type: 'POST',
+                data: { maSP: Id, soLuong: qty },
+                success: function(data) {
+                    location.reload();
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Thất bại',
+                        text: 'Đã có lỗi xảy ra'
+                    });
+                }
+            });
+        }
+
+        function increaseQty(Id) {
+            let input = document.getElementById('qty_' + Id);
+            let currentQty = parseInt(input.value);
+            if (currentQty < 100) {
+                input.value = currentQty + 1;
+                UpdateCart(Id, input.value);
+            }
+        }
+
+        function decreaseQty(Id) {
+            let input = document.getElementById('qty_' + Id);
+            let currentQty = parseInt(input.value);
+            if (currentQty > 1) {
+                input.value = currentQty - 1;
+                UpdateCart(Id, input.value);
+            }
+        }
+    </script>
+}
+
+<style>
+    .cart-item:hover {
+        background: var(--light-bg);
+    }
+    
+    .breadcrumb {
+        background: transparent;
+    }
+    
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: "›";
+        color: var(--text-light);
+    }
+    
+    .breadcrumb-item a {
+        color: var(--text-dark);
+        text-decoration: none;
+    }
+    
+    .breadcrumb-item a:hover {
+        color: var(--primary-color);
+    }
+</style>
