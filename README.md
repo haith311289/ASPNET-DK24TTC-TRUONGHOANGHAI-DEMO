@@ -46,6 +46,8 @@
 **Sinh viên**: Trương Hoàng Hải  
 Số Điện Thoại: 0903996584
 
+Email: haith311289@tvu-onschool.edu.vn
+
 **Dự án**: Xây dựng Website Bán Sản Phẩm Cà Phê Giải Khát  
 **Ngày cập nhật**: 27/11/2025  
 
