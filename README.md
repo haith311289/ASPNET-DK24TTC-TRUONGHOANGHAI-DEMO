@@ -77,4 +77,7 @@ Ngày 11/11/2025: Tạo giao diện, chức năng thêm, sửa sản phẩm
 Ngày 14/11/2025: Tạo chức năng đặt hàng lưu vào cơ sở dữ liệu
 
 
+Ngày 25/11/2025: Hoàn thiện các chức năng của Website
+
+
 Ngày 28/11/2025: Upload Báo Cáo
